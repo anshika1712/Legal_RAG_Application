@@ -1,0 +1,123 @@
+{
+  "_schema": {
+    "description": "Hand-authored Q&A pairs grounded in the 5 base contracts. Used as the eval target for RAGAS scoring. Authored from a verbatim read of each PDF (ingestion.pdf_parser output) — see chat transcript for sourcing notes.",
+    "fields": {
+      "id": "stable identifier — never rename, results are tracked by id over time",
+      "category": "one of: bm25_friendly | semantic | multi_doc | out_of_corpus | edge",
+      "question": "the user-facing query passed to retrieval.pipeline.answer",
+      "ground_truth": "the reference answer the LLM should produce (used by RAGAS answer_correctness + context_recall)",
+      "expected_sources": "list of source filenames that MUST appear in citations; [] for out-of-corpus questions where refusal is correct"
+    }
+  },
+  "questions": [
+    {
+      "id": "bm25_01_employment_notice_period",
+      "category": "bm25_friendly",
+      "question": "What is the notice period for terminating the employment agreement without cause?",
+      "ground_truth": "The Company may terminate the employment agreement without Cause by giving the Employee 2 (two) months' notice in writing, or payment of 2 (two) months' salary in lieu of such notice.",
+      "expected_sources": ["EMPLOYMENT_AGREEMENT Sample.pdf"]
+    },
+    {
+      "id": "bm25_02_royalty_rate",
+      "category": "bm25_friendly",
+      "question": "What is the rate of royalty payment under the Royalty Agreement?",
+      "ground_truth": "The Company shall pay royalty to BIRAC at the rate of 10 (Ten) per cent on annual Net Sales of the product(s) developed with BIRAC's assistance.",
+      "expected_sources": ["Royalty_Agreement.pdf"]
+    },
+    {
+      "id": "bm25_03_non_compete_duration",
+      "category": "bm25_friendly",
+      "question": "How long does the non-compete restriction last after the employee leaves PW Private Limited?",
+      "ground_truth": "The non-compete restriction lasts for a further period of 1 (one) year from the date of ceasing to be in employment with the Employer.",
+      "expected_sources": ["Non-COMPETE AGREEMENT (1).pdf"]
+    },
+    {
+      "id": "bm25_04_retention_money",
+      "category": "bm25_friendly",
+      "question": "What is the retention money percentage in the builder contract, and for how long is it held?",
+      "ground_truth": "A sum equivalent to 5 per cent of the total contract amount shall be retained by the owner as retention money, paid after a period of 12 months from the date of handing over the bungalow complete in all respects and fit for occupation.",
+      "expected_sources": ["builder_contract.pdf"]
+    },
+
+    {
+      "id": "semantic_01_catering_late_delivery",
+      "category": "semantic",
+      "question": "What happens if the catering service provider repeatedly delivers food late?",
+      "ground_truth": "For delay in service delivery, the penalty schedule is: 1st instance — Warning; 2nd instance — 3% of monthly billing amount; 3rd instance — 5% of monthly billing amount.",
+      "expected_sources": ["TNCFOOD_312a0f30-7887-45f0-a87e1753776272715_buyer-jaipur6.pdf"]
+    },
+    {
+      "id": "semantic_02_builder_delay_penalty",
+      "category": "semantic",
+      "question": "What penalty applies if the construction is not finished on schedule?",
+      "ground_truth": "If the builders fail to complete the work within the stipulated period, they shall pay liquidated damages at the agreed per-day rate, subject to a maximum of 2% of the total contract amount payable under the agreement. The owner may deduct these damages from any installment becoming due to the builders.",
+      "expected_sources": ["builder_contract.pdf"]
+    },
+    {
+      "id": "semantic_03_royalty_ends",
+      "category": "semantic",
+      "question": "Under what circumstances does the company's obligation to pay royalty come to an end?",
+      "ground_truth": "The liability to pay royalty terminates upon the first of two events to occur: (a) the cumulative 10% royalty paid to BIRAC becomes equal to the amount of Grant-in-Aid disbursed (and not returned as unutilized funds); or (b) Foreclosure or Termination of the Project as per the terms of the GLA.",
+      "expected_sources": ["Royalty_Agreement.pdf"]
+    },
+    {
+      "id": "semantic_04_employment_for_cause",
+      "category": "semantic",
+      "question": "Under what circumstances can the employee be dismissed for serious misconduct?",
+      "ground_truth": "\"Cause\" for dismissal includes: (a) gross negligence and willful misconduct in the course of employment; (b) fraud, embezzlement, theft, commission of a felony, or dishonesty; (c) behaviour materially detrimental to the interests of the Company; (d) material breach of the agreement terms; (e) unauthorised or negligent disclosure of confidential information (excluding disclosures required in the ordinary course of business); or (f) being charged with any felony or crime involving moral turpitude, fraud, or misrepresentation.",
+      "expected_sources": ["EMPLOYMENT_AGREEMENT Sample.pdf"]
+    },
+
+    {
+      "id": "multi_01_arbitration_contracts",
+      "category": "multi_doc",
+      "question": "Which contracts require disputes to be resolved through arbitration?",
+      "ground_truth": "Multiple contracts provide for arbitration. The Non-Compete Agreement (clause 8.3) refers disputes to a sole arbitrator under the Arbitration and Conciliation Act. The Builder Contract (clause 11) refers all disputes to two arbitrators (one appointed by each party) with an umpire, under the Arbitration and Conciliation Act 1996; this reference is mandatory before any enforcement action. The Royalty Agreement also references injunctive relief and dispute resolution but vests exclusive jurisdiction in the Courts at New Delhi.",
+      "expected_sources": ["Non-COMPETE AGREEMENT (1).pdf", "builder_contract.pdf"]
+    },
+    {
+      "id": "multi_02_termination_notice_across",
+      "category": "multi_doc",
+      "question": "Compare the termination notice periods across the contracts.",
+      "ground_truth": "Termination notice periods differ across the contracts: the Non-Compete Agreement requires 7 days' notice with mutual consent (clause 7.1); the Employment Agreement requires 2 months' written notice (or 2 months' salary in lieu) for termination without Cause (clause 11); the Builder Contract requires 7 days' written notice through the architect when terminating for builder default (clauses 7 and 8); the Catering Contract allows termination by mutual consent without penalty, or immediate termination on uncured material breach.",
+      "expected_sources": ["Non-COMPETE AGREEMENT (1).pdf", "EMPLOYMENT_AGREEMENT Sample.pdf", "builder_contract.pdf", "TNCFOOD_312a0f30-7887-45f0-a87e1753776272715_buyer-jaipur6.pdf"]
+    },
+    {
+      "id": "multi_03_governing_law_india",
+      "category": "multi_doc",
+      "question": "Which contracts are explicitly governed by the laws of India?",
+      "ground_truth": "Three contracts state they are governed by Indian law: the Employment Agreement (clause 13.1, interpreted in accordance with the laws of India); the Non-Compete Agreement (clause 8.1, governed by and construed in accordance with the laws of India); and the Royalty Agreement (clause 13, governed and interpreted in accordance with the laws of India).",
+      "expected_sources": ["EMPLOYMENT_AGREEMENT Sample.pdf", "Non-COMPETE AGREEMENT (1).pdf", "Royalty_Agreement.pdf"]
+    },
+
+    {
+      "id": "ooc_01_tax_rate",
+      "category": "out_of_corpus",
+      "question": "What is the corporate income tax rate in India?",
+      "ground_truth": "I could not find this in the provided contracts.",
+      "expected_sources": []
+    },
+    {
+      "id": "ooc_02_gdpr",
+      "category": "out_of_corpus",
+      "question": "What does GDPR say about data subject access requests?",
+      "ground_truth": "I could not find this in the provided contracts.",
+      "expected_sources": []
+    },
+
+    {
+      "id": "edge_01_confidentiality_broad",
+      "category": "edge",
+      "question": "What confidentiality obligations do the parties have across these contracts?",
+      "ground_truth": "Confidentiality obligations appear across multiple contracts. The Employment Agreement (clause 9) requires the Employee to execute a separate confidentiality and intellectual property assignment agreement with the Company. The Non-Compete Agreement (clause 5) requires the Employee and affiliates to treat any information received from the Employer as strictly confidential, prohibits disclosure of the agreement's contents to third parties without consent, and carves out statutory or court-ordered disclosure. The Royalty Agreement (clause 5) prohibits both parties from sharing research methodology, intellectual property rights, trade secrets, or other confidential information during or after the term, with exceptions for information already in the public domain, in the recipient's prior possession, lawfully obtained from a third party, or required by law.",
+      "expected_sources": ["EMPLOYMENT_AGREEMENT Sample.pdf", "Non-COMPETE AGREEMENT (1).pdf", "Royalty_Agreement.pdf"]
+    },
+    {
+      "id": "edge_02_royalty_parties_dates",
+      "category": "edge",
+      "question": "Who are the parties to the Royalty Agreement and when was it signed and effective?",
+      "ground_truth": "The Royalty Agreement is between the Biotechnology Industry Research Assistance Council (BIRAC), a Government of India Enterprise, and M/s Microtechnology Enterprises. It was made on the Twenty-fifth Day of September 2022 and came into force on the Fifth day of October 2022 at New Delhi.",
+      "expected_sources": ["Royalty_Agreement.pdf"]
+    }
+  ]
+}

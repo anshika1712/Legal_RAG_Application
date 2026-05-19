@@ -1,0 +1,79 @@
+You are helping build a Legal Contract Lookup RAG system.
+Always read the full context below before writing any code.
+Never skip the build order — implement one component at a time.
+
+# Legal Contract Lookup — RAG System
+
+## Project goal
+A chat interface for querying legal contracts (NDAs, employment agreements,
+non-compete, royalty agreements) with cited clause-level answers.
+Users can also upload their own contracts and ask questions against them.
+
+## Stack
+- Python 3.11
+- LangChain for orchestration
+- ChromaDB for vector storage
+- BM25 (rank_bm25) for keyword retrieval
+- Cohere reranker API for reranking (rerank-english-v3.0)
+- Claude API for answer generation
+- RAGAS for evaluation
+- Streamlit for UI
+
+## Key design decisions
+- Page-then-chunk strategy: pdf_parser produces per-page Documents (pdfplumber);
+  chunker splits each page with `RecursiveCharacterTextSplitter` at 300 tokens
+  with 50 overlap (cl100k_base via tiktoken). Layout-aware chunking via
+  Unstructured `strategy="fast"` was tried and abandoned — title detection was
+  unreliable across the corpus (median chunk ~24 tokens, frequent body-as-title
+  false positives). If page-level citations turn out too coarse in eval, the
+  fallback is Docling (heavier install, real layout model) — not Unstructured tuning.
+- `clause_number` metadata is best-effort: regex-detected from each chunk's
+  leading text (`Section X`, `Article Y`, `Clause Z.W`, or leading "N.M" headings).
+  May be `None` — citations must work without it.
+- Every answer must cite `source + page`; include `clause_number` when present.
+- Hybrid retrieval: BM25 (exact clause/party name matches) + vector
+  (semantic meaning) → RRF → Cohere rerank → LLM. Always applied within a
+  SINGLE collection.
+- Two ChromaDB collections: `base_contracts` (preloaded demo corpus) and
+  `session_<session_id>` (per-user uploads, cleared on session end).
+- Mode-switch retrieval (NOT merge): each query targets exactly one
+  collection. If the user has uploaded docs in this session → query the
+  session collection only; otherwise → query base only. Base is demo/example
+  content (BIRAC royalty template, sample employment agreement, etc.) and
+  has no semantic relationship to a user's real contract — merging would
+  pollute relevance with template language and produce mixed-source
+  citations. The mode is reflected in the result dict (`mode: "base"|"session"`)
+  so the UI can label it explicitly.
+- Evaluation driven by real questions from a legal practitioner
+
+## Document upload feature
+- Users upload PDFs via Streamlit file uploader
+- Indexed into session-scoped ChromaDB collection on upload
+- Max 10MB per file, max 5 files per session
+- Session docs cleared on session end (no persistence in v1)
+
+## Conventions
+- All retrievers return List[Document] with metadata:
+  {source, clause_number, page, contract_type, collection}
+  `clause_number` may be `None`/`""` (best-effort field). Other keys required.
+- Retrievers may add stage-specific score annotations on top of this schema:
+  `bm25_score` (BM25), `similarity_score` (vector), `rrf_score` (RRF fusion),
+  `rerank_score` (Cohere reranker). These are stripped before generation —
+  the LLM only sees the canonical metadata above.
+- Never hallucinate clause content — if not found, say explicitly
+- Chunks: target 300 tokens (within 200-400 band), 50 token overlap
+- collection field in metadata = "base" or "session"
+
+## Build order
+[x] 1. Ingestion pipeline (pdf_parser ✓, chunker ✓, indexer ✓)
+[x] 2. BM25 retrieval
+[x] 3. Vector retrieval (base collection)
+[x] 4. RRF fusion
+[x] 5. Reranker (Cohere rerank-english-v3.0; graceful fallback to input order)
+[x] 6. LLM generation with citations (Claude sonnet-4; [N] citation parsing; graceful fallback)
+[x] 7. Session store (per-session Chroma collection + in-memory BM25 dict; thread-safe; idempotent)
+[x] 8. Streamlit UI with file uploader (app.py: chat + sidebar + citations + sources-used + mode badge)
+[x] 9. RAGAS eval pipeline (eval/run_eval.py: 15-question golden set across 5 categories;
+       Faithfulness/AnswerRelevancy/LLMContextPrecisionWithReference/LLMContextRecall/AnswerCorrectness;
+       Claude as judge via LangchainLLMWrapper; BGE-small for embedding-based metrics;
+       per-question CSV + per-category summary; mode-locked to base corpus)

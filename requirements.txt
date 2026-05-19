@@ -1,0 +1,19 @@
+# Pin versions later via `pip freeze` once the env is stable.
+langchain
+langchain-core
+langchain-community
+langchain-huggingface
+langchain-text-splitters
+langchain-anthropic
+langchain-chroma
+chromadb
+sentence-transformers
+pdfplumber
+rank_bm25
+cohere
+anthropic
+ragas
+datasets
+streamlit
+python-dotenv
+tiktoken
