@@ -1,76 +1,0 @@
-Warming pipeline (loads BGE model, base index, API clients)...
-...warmed.
-
-Running pipeline over 15 question(s)...
---------------------------------------------------------------------------------
-[1/15] (bm25_friendly) What is the notice period for terminating the employment agreement without cause?
-   -> 2.98s, sources=['EMPLOYMENT_AGREEMENT Sample.pdf', 'Non-COMPETE AGREEMENT (1).pdf', 'builder_contract.pdf', 'TNCFOOD_312a0f30-7887-45f0-a87e1753776272715_buyer-jaipur6.pdf'], low_conf=False
-[2/15] (bm25_friendly) What is the rate of royalty payment under the Royalty Agreement?
-   -> 6.51s, sources=['Royalty_Agreement.pdf'], low_conf=False
-[3/15] (bm25_friendly) How long does the non-compete restriction last after the employee leaves PW Private Limited?
-   -> 3.23s, sources=['Non-COMPETE AGREEMENT (1).pdf', 'EMPLOYMENT_AGREEMENT Sample.pdf'], low_conf=False
-[4/15] (bm25_friendly) What is the retention money percentage in the builder contract, and for how long is it held?
-   -> 2.76s, sources=['builder_contract.pdf'], low_conf=False
-[5/15] (semantic) What happens if the catering service provider repeatedly delivers food late?
-   -> 7.49s, sources=['TNCFOOD_312a0f30-7887-45f0-a87e1753776272715_buyer-jaipur6.pdf'], low_conf=False
-[6/15] (semantic) What penalty applies if the construction is not finished on schedule?
-   -> 4.86s, sources=['builder_contract.pdf'], low_conf=True
-[7/15] (semantic) Under what circumstances does the company's obligation to pay royalty come to an end?
-   -> 8.13s, sources=['Royalty_Agreement.pdf'], low_conf=False
-[8/15] (semantic) Under what circumstances can the employee be dismissed for serious misconduct?
-   -> 3.88s, sources=['EMPLOYMENT_AGREEMENT Sample.pdf', 'Non-COMPETE AGREEMENT (1).pdf'], low_conf=True
-[9/15] (multi_doc) Which contracts require disputes to be resolved through arbitration?
-   -> 8.01s, sources=['Royalty_Agreement.pdf', 'Non-COMPETE AGREEMENT (1).pdf', 'builder_contract.pdf', 'EMPLOYMENT_AGREEMENT Sample.pdf'], low_conf=False
-[10/15] (multi_doc) Compare the termination notice periods across the contracts.
-   -> 8.71s, sources=['builder_contract.pdf', 'TNCFOOD_312a0f30-7887-45f0-a87e1753776272715_buyer-jaipur6.pdf', 'Non-COMPETE AGREEMENT (1).pdf'], low_conf=True
-[11/15] (multi_doc) Which contracts are explicitly governed by the laws of India?
-   -> 14.33s, sources=['EMPLOYMENT_AGREEMENT Sample.pdf', 'Non-COMPETE AGREEMENT (1).pdf', 'TNCFOOD_312a0f30-7887-45f0-a87e1753776272715_buyer-jaipur6.pdf'], low_conf=False
-[12/15] (out_of_corpus) What is the corporate income tax rate in India?
-   -> 2.25s, sources=['Royalty_Agreement.pdf', 'EMPLOYMENT_AGREEMENT Sample.pdf'], low_conf=True
-[13/15] (out_of_corpus) What does GDPR say about data subject access requests?
-   -> 2.12s, sources=['EMPLOYMENT_AGREEMENT Sample.pdf', 'TNCFOOD_312a0f30-7887-45f0-a87e1753776272715_buyer-jaipur6.pdf', 'builder_contract.pdf'], low_conf=True
-[14/15] (edge) What confidentiality obligations do the parties have across these contracts?
-   -> 7.64s, sources=['Royalty_Agreement.pdf', 'Non-COMPETE AGREEMENT (1).pdf', 'EMPLOYMENT_AGREEMENT Sample.pdf'], low_conf=False
-[15/15] (edge) Who are the parties to the Royalty Agreement and when was it signed and effective?
-   -> 4.99s, sources=['Royalty_Agreement.pdf'], low_conf=False
-
-Scoring 15 item(s) with RAGAS (5 metrics)...
-Judge LLM: claude-sonnet-4-6
-Judge embeddings: BAAI/bge-small-en-v1.5
---------------------------------------------------------------------------------
-Evaluating:   0%|          | 0/75 [00:00<?, ?it/s]Evaluating:   1%|▏         | 1/75 [00:02<02:38,  2.14s/it]Evaluating:   3%|▎         | 2/75 [00:02<01:31,  1.26s/it]Evaluating:   5%|▌         | 4/75 [00:02<00:37,  1.90it/s]Evaluating:   8%|▊         | 6/75 [00:05<00:52,  1.31it/s]Evaluating:  11%|█         | 8/75 [00:05<00:37,  1.81it/s]Evaluating:  12%|█▏        | 9/75 [00:06<00:46,  1.42it/s]Evaluating:  13%|█▎        | 10/75 [00:07<00:52,  1.23it/s]Evaluating:  15%|█▍        | 11/75 [00:08<00:46,  1.38it/s]Evaluating:  16%|█▌        | 12/75 [00:08<00:40,  1.57it/s]Evaluating:  17%|█▋        | 13/75 [00:09<00:33,  1.85it/s]Evaluating:  19%|█▊        | 14/75 [00:09<00:38,  1.59it/s]Evaluating:  20%|██        | 15/75 [00:10<00:44,  1.35it/s]Evaluating:  23%|██▎       | 17/75 [00:11<00:26,  2.17it/s]Evaluating:  24%|██▍       | 18/75 [00:12<00:36,  1.54it/s]Evaluating:  25%|██▌       | 19/75 [00:13<00:37,  1.48it/s]Evaluating:  27%|██▋       | 20/75 [00:14<00:44,  1.24it/s]Evaluating:  29%|██▉       | 22/75 [00:14<00:26,  1.99it/s]Evaluating:  31%|███       | 23/75 [00:15<00:27,  1.89it/s]Evaluating:  33%|███▎      | 25/75 [00:15<00:20,  2.47it/s]Evaluating:  35%|███▍      | 26/75 [00:16<00:21,  2.31it/s]Evaluating:  36%|███▌      | 27/75 [00:16<00:20,  2.29it/s]Evaluating:  37%|███▋      | 28/75 [00:17<00:21,  2.20it/s]Evaluating:  39%|███▊      | 29/75 [00:18<00:27,  1.68it/s]Evaluating:  40%|████      | 30/75 [00:20<00:44,  1.01it/s]Evaluating:  41%|████▏     | 31/75 [00:20<00:38,  1.14it/s]Evaluating:  43%|████▎     | 32/75 [00:21<00:39,  1.10it/s]Evaluating:  45%|████▌     | 34/75 [00:22<00:32,  1.26it/s]Evaluating:  47%|████▋     | 35/75 [00:23<00:29,  1.37it/s]Evaluating:  48%|████▊     | 36/75 [00:25<00:38,  1.01it/s]Evaluating:  49%|████▉     | 37/75 [00:25<00:34,  1.09it/s]Evaluating:  52%|█████▏    | 39/75 [00:26<00:23,  1.56it/s]Evaluating:  53%|█████▎    | 40/75 [00:27<00:22,  1.55it/s]Evaluating:  55%|█████▍    | 41/75 [00:28<00:24,  1.40it/s]Evaluating:  56%|█████▌    | 42/75 [00:28<00:25,  1.30it/s]Evaluating:  57%|█████▋    | 43/75 [00:30<00:27,  1.15it/s]Evaluating:  59%|█████▊    | 44/75 [00:30<00:22,  1.39it/s]Evaluating:  61%|██████▏   | 46/75 [00:31<00:16,  1.72it/s]Evaluating:  63%|██████▎   | 47/75 [00:31<00:16,  1.65it/s]Evaluating:  64%|██████▍   | 48/75 [00:32<00:13,  1.93it/s]Evaluating:  65%|██████▌   | 49/75 [00:32<00:14,  1.84it/s]Evaluating:  67%|██████▋   | 50/75 [00:33<00:14,  1.74it/s]Evaluating:  71%|███████   | 53/75 [00:34<00:08,  2.71it/s]Evaluating:  72%|███████▏  | 54/75 [00:34<00:08,  2.50it/s]Evaluating:  75%|███████▍  | 56/75 [00:35<00:07,  2.41it/s]Evaluating:  76%|███████▌  | 57/75 [00:36<00:09,  2.00it/s]Evaluating:  77%|███████▋  | 58/75 [00:37<00:12,  1.37it/s]Evaluating:  80%|████████  | 60/75 [00:39<00:12,  1.18it/s]Evaluating:  81%|████████▏ | 61/75 [00:41<00:13,  1.01it/s]Evaluating:  83%|████████▎ | 62/75 [00:41<00:10,  1.25it/s]Evaluating:  84%|████████▍ | 63/75 [00:42<00:08,  1.34it/s]Evaluating:  85%|████████▌ | 64/75 [00:42<00:06,  1.64it/s]Evaluating:  87%|████████▋ | 65/75 [00:43<00:07,  1.40it/s]Evaluating:  88%|████████▊ | 66/75 [00:43<00:05,  1.78it/s]Evaluating:  91%|█████████ | 68/75 [00:44<00:03,  2.31it/s]Evaluating:  92%|█████████▏| 69/75 [00:45<00:04,  1.28it/s]Evaluating:  93%|█████████▎| 70/75 [00:47<00:04,  1.06it/s]Evaluating:  95%|█████████▍| 71/75 [00:51<00:06,  1.71s/it]Evaluating:  96%|█████████▌| 72/75 [00:53<00:05,  1.91s/it]Evaluating:  97%|█████████▋| 73/75 [00:54<00:03,  1.74s/it]Evaluating:  99%|█████████▊| 74/75 [00:55<00:01,  1.45s/it]Evaluating: 100%|██████████| 75/75 [01:05<00:00,  3.96s/it]Evaluating: 100%|██████████| 75/75 [01:05<00:00,  1.14it/s]
-
-Full results written to: /Users/nc25500_anshika/Documents/RAG_Application/eval/results/results_20260517_163023.csv
-
-================================================================================
-RAGAS SUMMARY
-================================================================================
-
-Per-category mean scores (NaN dropped within each cell):
-               faithfulness  answer_relevancy  context_precision  context_recall  answer_correctness
-category                                                                                            
-bm25_friendly         0.833             0.682              0.750           0.750               0.639
-edge                  0.976             0.849              1.000           1.000               0.730
-multi_doc             0.867             0.924              0.222           0.739               0.568
-out_of_corpus         1.000             0.000              0.625           0.500               1.000
-semantic              0.972             0.232              0.375           0.500               0.506
-
-Overall mean scores:
-faithfulness          0.918
-answer_relevancy      0.542
-context_precision     0.561
-context_recall        0.681
-answer_correctness    0.650
-
-Per-category source recall (cited file ⊇ expected file set):
-category
-bm25_friendly    1.000
-edge             1.000
-multi_doc        0.806
-semantic         1.000
-
-Lowest-scoring rows (composite mean across metrics):
-                                id      category  _mean  faithfulness  answer_relevancy  context_precision  context_recall  answer_correctness
-      bm25_03_non_compete_duration bm25_friendly  0.172         0.667               0.0                0.0             0.0               0.191
-  semantic_04_employment_for_cause      semantic  0.240         1.000               0.0                0.0             0.0               0.200
-semantic_01_catering_late_delivery      semantic  0.253         1.000               0.0                0.0             0.0               0.267

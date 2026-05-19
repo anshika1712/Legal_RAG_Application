@@ -19,7 +19,14 @@ data/chroma_db/*
 !data/chroma_db/.gitkeep
 data/raw_contracts/*.pdf
 
+# Persistent vector store — regenerated locally by running the indexer.
+# Listed as `data/processed/chroma/` originally (the actual on-disk path);
+# the older `data/chroma_db/` entry above is kept for back-compat with
+# anyone on a pre-pipeline.py checkout.
+data/processed/
+
 tests/sample_pdfs/*.pdf
 
 eval/results/*.csv
+eval/results/*.log
 !eval/results/.gitkeep
