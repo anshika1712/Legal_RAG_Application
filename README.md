@@ -12,7 +12,7 @@ Users can upload their own contracts in a per-session sandbox — when they do, 
 - **Strict citation contract**: the LLM is constrained to cite every claim with `[N]` references; a parser maps those back to source/page/clause for the UI. If the answer isn't in the retrieved chunks, the model returns a fixed refusal sentinel — never fabricated content.
 - **Mode-switch retrieval (base XOR session)**: a query never spans both the demo corpus and a user's uploads. Mixing template language with a real contract pollutes relevance, so the system picks exactly one collection based on whether the session has uploaded files.
 - **Page-then-chunk ingestion**: each PDF page becomes a Document, then split with `RecursiveCharacterTextSplitter` at 300 tokens / 50 overlap. Clause numbers are detected per chunk via best-effort regex (precision-tuned after a manual audit found 40% false-positive headings in the first attempt).
-- **RAGAS evaluation harness**: 15 hand-authored question/reference pairs grounded in the 5 base contracts, scored on Faithfulness / Answer Relevancy / Context Precision / Context Recall / Answer Correctness. Claude is wired in as the judge (no OpenAI key required).
+- **RAGAS evaluation harness**: 15 hand-authored question/reference pairs grounded in the 5 base contracts, scored on Faithfulness / Answer Relevancy / Context Precision / Context Recall / Answer Correctness. Claude is wired in as the judge.
 
 ---
 
