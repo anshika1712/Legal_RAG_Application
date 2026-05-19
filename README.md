@@ -96,36 +96,6 @@ The Streamlit app opens at `http://localhost:8501`. The header shows a clear **B
 
 ---
 
-## Design decisions worth a closer look
-
-These are the choices I'd defend in an interview — each grew out of a problem the naive version hit.
-
-### 1. Mode-switch retrieval instead of merged base+session
-
-The instinct is to RRF-merge base and session results so a user query can hit both. In practice, base contracts are templates and demo files with no semantic relationship to a user's real contract — merging pollutes relevance with template language and produces mixed-source citations (e.g., an answer about the user's employment letter citing the demo royalty agreement). The pipeline now picks exactly one collection per query based on session state, and the UI surfaces the active mode prominently so the user can't be surprised.
-
-### 2. Citation parsing as a contract between LLM and UI
-
-The prompt mandates `[N]` references on every claim. A small parser then extracts those numbers, resolves them to the corresponding reranked chunk, and the UI displays *only* the chunks the LLM actually cited — not the full top-k. For a legal use case, showing chunks the model considered-but-discarded is noise; only the evidence backing the actual claims matters. The parser also enables an "answered" check (`NOT_FOUND_SENTINEL` present or not) which is used to suppress a redundant low-confidence banner when the model has already explicitly refused.
-
-### 3. Auto-index on upload (no "Index" button)
-
-The first version of the UI had a separate "Index uploaded docs" button. Users would drop a file, type a question, and get an answer from the *base* corpus — because they hadn't clicked the button. The widget showed the file as "uploaded" but it wasn't indexed yet. The fix was to auto-index whenever the uploader's file set changes (and auto-clear the session when the user removes all files via the widget's `×`). The Index button is gone; the mode badge guarantees you always know what's being searched.
-
-### 4. Page-then-chunk (not clause-aware) with best-effort clause regex
-
-A clause-aware chunker sounds principled but is wrong for this corpus: contracts use inconsistent numbering (`1.`, `1.1`, `(a)`, `Section X`, `Article Y`), titles run into body text, and PDF extraction loses some heading metadata. The initial regex attempt had a ~40% false-positive rate on clause headings (e.g., body text starting with `"1 rice, 2 chapatis"` from a catering menu got labeled as Clause 1). After a manual audit, the regex was tightened to anchor on the leading text of each chunk, and clause numbers are treated as best-effort metadata — citations work without them.
-
-### 5. Lazy + cached model loading
-
-`_make_embeddings()` is `@functools.lru_cache(maxsize=1)`-decorated so the BGE-small model (~133MB) loads exactly once per process. `pipeline.prewarm()` is wrapped in Streamlit's `@st.cache_resource` so the first request takes ~5s (model load + index load + API client init) and every subsequent one takes ~3-8s end-to-end. Session uploads reuse the already-loaded embeddings via a constructor injection on `VectorRetriever`.
-
-### 6. Graceful fallback on reranker and LLM
-
-If `COHERE_API_KEY` is missing or the reranker call fails, the reranker returns the input order unchanged so the pipeline still produces an answer (lower-quality, but functional). The same pattern protects the LLM call: if Anthropic is unreachable, the user gets a structured fallback with the retrieved chunks dumped raw, instead of a hard 500.
-
----
-
 ## Project structure
 
 ```
